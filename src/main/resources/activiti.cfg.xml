@@ -9,15 +9,20 @@ http://www.springframework.org/schema/contex
 http://www.springframework.org/schema/context/spring-context.xsd
 http://www.springframework.org/schema/tx
 http://www.springframework.org/schema/tx/spring-tx.xsd">
-    <!-- 默认id对应的值 为processEngineConfiguration -->
-    <!-- processEngine Activiti的流程引擎 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql:///activiti"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="maxActive" value="3"/>
+        <property name="maxIdle" value="1"/>
+    </bean>
+    <!--在默认方式下 bean的id  固定为 processEngineConfiguration-->
     <bean id="processEngineConfiguration"
           class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
-        <property name="jdbcDriver" value="com.mysql.jdbc.Driver"/>
-        <property name="jdbcUrl" value="jdbc:mysql:///activiti"/>
-        <property name="jdbcUsername" value="root"/>
-        <property name="jdbcPassword" value="123456"/>
-        <!-- activiti数据库表处理策略 -->
+        <!--引入上面配置好的 链接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--actviti数据库表在生成时的策略  true - 如果数据库中已经存在相应的表，那么直接使用，如果不存在，那么会创建-->
         <property name="databaseSchemaUpdate" value="true"/>
     </bean>
 </beans>
